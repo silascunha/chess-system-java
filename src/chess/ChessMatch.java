@@ -8,12 +8,14 @@ import chess.pieces.Rook;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class ChessMatch {
 
     private int turn;
     private Color currentPlayer;
     private Board board;
+    private boolean check;
 
     private List<Piece> piecesOnTheBoard = new ArrayList<>();
     private List<Piece> capturedPieces = new ArrayList<>();
@@ -22,6 +24,7 @@ public class ChessMatch {
         board = new Board(8, 8);
         turn = 1;
         currentPlayer = Color.WHITE;
+        check = false;
         initialSetup();
     }
 
@@ -73,6 +76,17 @@ public class ChessMatch {
         return capturedPiece;
     }
 
+    private void undoMove(Position source, Position target, Piece capturedPiece) {
+        Piece p = board.removePiece(target);
+        board.placePiece(p, source);
+
+        if (capturedPiece != null) {
+            board.placePiece(capturedPiece, target);
+            capturedPieces.remove(capturedPiece);
+            piecesOnTheBoard.add(capturedPiece);
+        }
+    }
+
     private void validateSourcePosition(Position position) {
         if (!board.thereIsAPiece(position)) throw new ChessException("There is no piece on source position");
         if (currentPlayer != ((ChessPiece) board.piece(position)).getColor()) throw new ChessException("This piece is not yours");
@@ -86,6 +100,17 @@ public class ChessMatch {
     private void nextTurn() {
         if (currentPlayer == Color.BLACK) turn++;
         currentPlayer = (currentPlayer == Color.WHITE) ? Color.BLACK : Color.WHITE;
+    }
+
+    private Color opponent(Color color) {
+        return (Color.WHITE == color) ? Color.BLACK : Color.WHITE;
+    }
+
+    private ChessPiece king(Color color) {
+        List<Piece> list = piecesOnTheBoard.stream().filter(x -> ((ChessPiece)x).getColor() == color).collect(Collectors.toList()); //downcast no x para acessar o .getColor
+
+        for (Piece p : list) if (p instanceof King) return (ChessPiece) p;
+        throw new IllegalStateException("There is no " + color + " king piece on the board");
     }
 
     private void placeNewPiece(char column, int row, ChessPiece piece) {
