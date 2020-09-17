@@ -36,7 +36,7 @@ public class UI {
         try {
             String s = sc.nextLine();
             char column = s.charAt(0);
-            int row = Integer.parseInt(String.valueOf(s.charAt(1)));
+            int row = Integer.parseInt(s.substring(1));
             return new ChessPosition(column, row);
         }
         catch (RuntimeException e) {
@@ -62,6 +62,7 @@ public class UI {
         printCapturedPieces(captured);
         System.out.println();
         System.out.println("Turn: " + chessMatch.getTurn() + "\nWaiting player: " + chessMatch.getCurrentPlayer());
+        if (chessMatch.getCheck()) System.out.println("CHECK!");
     }
 
     public static void printBoard(ChessPiece[][] pieces, boolean[][] possibleMoves) {
