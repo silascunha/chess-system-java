@@ -1,2 +1,2 @@
 # Sistema de jogo de Xadrez em Java
-Este projeto está sendo feito enquanto acompanho um curso de Java da Udemy do professor [@acenelio](https://github.com/acenelio/).
+Este projeto está sendo feito para fixação de aprendizado em Programação Orientada a Objetos em Java, através de um [curso da Udemy](https://www.udemy.com/course/java-curso-completo/).
